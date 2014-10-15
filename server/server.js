@@ -31,10 +31,11 @@ server.get('/translation', function (req, res, next) {
 
     var translations = [
         {
+            'id': 1,
             'key': 'lusso.suck_a_duck',
             'translations': {
                 'fi': 'Lipaiseppa ankkaa',
-                'se': 'Sucken sie eine duk',
+                'sv': 'Sucken sie eine duk',
                 'en': 'Please suck a duck'
             }
         }
@@ -43,6 +44,12 @@ server.get('/translation', function (req, res, next) {
     res.send(translations);
     next();
 });
+
+server.post('/translation/{id}', function (req, res, next) {
+    res.send({});
+    next();
+});
+
 
 server.listen(config.server.port, function() {
     console.log('%s listening at %s', server.name, server.url);

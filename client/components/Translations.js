@@ -6,7 +6,10 @@ var config = require('./../config');
 var $ = require('jquery');
 var React = require('react');
 var Table = require('react-bootstrap/Table');
-var Translation = require('./Translation')
+var Translation = require('./Translation');
+var Modal = require('react-bootstrap/Modal');
+var Button = require('react-bootstrap/Button');
+var EditModal = require('./EditModal');
 
 var Translations = React.createClass({
 
@@ -24,35 +27,63 @@ var Translations = React.createClass({
     getInitialState: function() {
 
         return {
-            translations: []
+            translations: [],
+            edit: null
         };
+    },
+
+    handleEdit: function(key) {
+        this.setState({ edit: key });
+    },
+
+    handleHide: function(t) {
+        alert('Close me!')
+    },
+
+    handleSave: function(t) {
+        
+        console.log(t);
+
+        $.post(config.api + "/translation/" + t.id);
+    },
+
+    handleClose: function() {
+        this.setState({edit: null});
     },
 
     render: function() {
     	
-        var translationNodes = this.state.translations.map(function(t) { 
-            
-            console.log(t);
+        console.log(this.state.translations, 'trans');
 
-            return (<Translation key={t.key} t={t}></Translation>);
-        });
+        var translationNodes = this.state.translations.map(function(t, key) { 
+            return (<Translation onClick={this.handleEdit.bind(this, key)} key={key} t={t}></Translation>);
+        }.bind(this));
 
+        var modalNode = '';
+        if (this.state.edit !== null) {
+            modalNode = (<EditModal onRequestHide={this.handleClose} t={this.state.translations[this.state.edit]} handleSave={this.handleSave} />);
+        };
+       
         return (
-            <Table>
-                <thead>
-                    <tr>
-                        <th>Key</th>
-                        <th>fi</th>
-                        <th>en</th>
-                        <th>se</th>
-                    </tr>
-                </thead>
+            <div>
+                {modalNode}
+                <Table>
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>key</th>
+                            <th>fi</th>
+                            <th>en</th>
+                            <th>sv</th>
+                        </tr>
+                    </thead>
 
-                <tbody>
-                    {translationNodes}
-                </tbody>
+                    <tbody>
+                        {translationNodes}
+                    </tbody>
 
-            </Table>
+                </Table>
+            </div>
     	);
     }
 
