@@ -3,15 +3,14 @@
  */
 
 var React = require('react');
+var Button = require('react-bootstrap/Button');
 
 var Translation = React.createClass({
 
     render: function() {
-
         return (
-
             <tr>
-                <td><a href="#" onClick={this.props.onClick}>{this.props.t.id}</a></td>
+                <td><Button bsStyle="warning" onClick={this.props.onClick}>Edit</Button></td>
                 <td>{this.props.t.key}</td>
                 <td>{this.props.t.translations['fi']}</td>
                 <td>{this.props.t.translations['en']}</td>

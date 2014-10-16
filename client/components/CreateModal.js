@@ -7,13 +7,12 @@ var Modal = require('react-bootstrap/Modal');
 var Button = require('react-bootstrap/Button');
 
 // Our custom component is managing whether the Modal is visible
-var EditModal = React.createClass({
+var CreateModal = React.createClass({
 
   handleSave: function() {
 
     var t = {
-        id: this.props.t.id,
-        key: this.props.t.key,
+        key: this.refs.key.getDOMNode().value,
         translations: {
           fi: this.refs.fi.getDOMNode().value,
           en: this.refs.en.getDOMNode().value,
@@ -28,19 +27,22 @@ var EditModal = React.createClass({
 
   render: function () {
     return (
-        <Modal title={'Edit translations: "' + this.props.t.key + '"'} onRequestHide={this.props.onRequestHide}>
+        <Modal title="Create new translation" onRequestHide={this.props.onRequestHide}>
           <div className="modal-body">
             
             <form>
 
+              <label>key</label>
+              <input className="form-control" ref="key" />
+
               <label>fi</label>
-              <textarea ref="fi" className="form-control" defaultValue={this.props.t.translations.fi}></textarea>
+              <textarea ref="fi" className="form-control"></textarea>
 
               <label>en</label>
-              <textarea ref="en" className="form-control" defaultValue={this.props.t.translations.en}></textarea>
+              <textarea ref="en" className="form-control"></textarea>
 
               <label>sv</label>
-              <textarea ref="sv" className="form-control" defaultValue={this.props.t.translations.sv}></textarea>
+              <textarea ref="sv" className="form-control"></textarea>
 
             </form>
 
@@ -54,4 +56,4 @@ var EditModal = React.createClass({
   }
 });
 
-module.exports = EditModal;
+module.exports = CreateModal;

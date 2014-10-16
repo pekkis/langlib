@@ -4,31 +4,38 @@
 
 var config = require('./../config');
 var $ = require('jquery');
-var React = require('react');
+var React = require('react/addons');
 var Table = require('react-bootstrap/Table');
 var Translation = require('./Translation');
 var Modal = require('react-bootstrap/Modal');
 var Button = require('react-bootstrap/Button');
+var CreateModal = require('./CreateModal');
 var EditModal = require('./EditModal');
+
 
 var Translations = React.createClass({
 
     componentDidMount: function() {
+        
+        $.getJSON(config.api + '/api/translation').then(function(t) {
+            this.setTranslations(t);
+        }.bind(this));
+    },
 
-        console.log(config.api + '/translation');
-        console.log($.getJSON);
-
-        var that = this;
-        $.getJSON(config.api + '/translation').then(function(t) {
-            that.setState({ translations: t })
+    setTranslations: function(t) {
+        t.sort(function (a, b) {
+            return a.key > b.key;
         });
+
+        this.setState({ translations: t })
     },
 
     getInitialState: function() {
 
         return {
             translations: [],
-            edit: null
+            edit: null,
+            create: false
         };
     },
 
@@ -36,38 +43,61 @@ var Translations = React.createClass({
         this.setState({ edit: key });
     },
 
-    handleHide: function(t) {
-        alert('Close me!')
-    },
-
     handleSave: function(t) {
-        
-        console.log(t);
+                
+        var edit = this.state.edit;
 
-        $.post(config.api + "/translation/" + t.id);
+        $.post(config.api + "/api/translation/" + this.state.translations[edit].id, t).then(function(ret) { 
+
+            var ts = this.state.translations;
+            ts[edit] = t;
+            this.setState({translations: ts});
+            
+        }.bind(this));
     },
+
+    handleCreate: function(t) {
+
+        $.post(config.api + "/api/translation", t).then(function(ret) { 
+
+            var ts = this.state.translations;
+            ts.push(ret);
+            this.setState({translations: ts});            
+            
+        }.bind(this));
+
+    },
+
+    requestCreate: function() {
+        this.setState({create: true});
+    },
+
 
     handleClose: function() {
-        this.setState({edit: null});
+        this.setState({edit: null, create: false});
     },
 
     render: function() {
-    	
-        console.log(this.state.translations, 'trans');
 
         var translationNodes = this.state.translations.map(function(t, key) { 
             return (<Translation onClick={this.handleEdit.bind(this, key)} key={key} t={t}></Translation>);
         }.bind(this));
 
-        var modalNode = '';
+        var editNode = '';
         if (this.state.edit !== null) {
-            modalNode = (<EditModal onRequestHide={this.handleClose} t={this.state.translations[this.state.edit]} handleSave={this.handleSave} />);
+            editNode = (<EditModal onRequestHide={this.handleClose} t={this.state.translations[this.state.edit]} handleSave={this.handleSave} />);
         };
-       
+
+        var createNode = '';
+        if (this.state.create) {
+            createNode = (<CreateModal onRequestHide={this.handleClose} handleSave={this.handleCreate} />);
+        };
+
         return (
             <div>
-                {modalNode}
-                <Table>
+                {editNode}
+                {createNode}
+                <Table striped bordered hover>
                     <thead>
                         <tr>
                             <th>id</th>
@@ -83,6 +113,9 @@ var Translations = React.createClass({
                     </tbody>
 
                 </Table>
+
+                <Button bsStyle="primary" onClick={this.requestCreate}>Add a new translation</Button>
+
             </div>
     	);
     }

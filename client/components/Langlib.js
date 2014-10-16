@@ -13,7 +13,14 @@ var Langlib = React.createClass({
 	render: function() {
 		return (
             <Grid>
-                <Row className="show-grid">
+                
+                <Row className="header">
+                    <Col md={12}>
+                        <h1>LangLib!</h1>
+                    </Col>
+                </Row>
+
+                <Row>
                     <Col md={12}>
                         <Translations></Translations>
                     </Col>
