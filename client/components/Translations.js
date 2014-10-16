@@ -97,6 +97,11 @@ var Translations = React.createClass({
             <div>
                 {editNode}
                 {createNode}
+                
+                <div className="controls">
+                    <Button bsStyle="primary" onClick={this.requestCreate}>Add a new translation</Button>
+                </div>
+
                 <Table striped bordered hover>
                     <thead>
                         <tr>
@@ -114,7 +119,9 @@ var Translations = React.createClass({
 
                 </Table>
 
-                <Button bsStyle="primary" onClick={this.requestCreate}>Add a new translation</Button>
+                <div className="controls">
+                     <Button bsStyle="primary" onClick={this.requestCreate}>Add a new translation</Button>
+                </div>
 
             </div>
     	);

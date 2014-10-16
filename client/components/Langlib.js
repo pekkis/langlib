@@ -12,7 +12,7 @@ var Langlib = React.createClass({
 
 	render: function() {
 		return (
-            <Grid>
+            <Grid fluid>
                 
                 <Row className="header">
                     <Col md={12}>
