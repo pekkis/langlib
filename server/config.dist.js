@@ -7,7 +7,7 @@ var config = {
     mysql: {
         'socketPath': '/tmp/mysql.sock',
         'user': 'root',
-        'password': 'g04753m135',
+        'password': 'rootpassu',
         'database': 'langlib'
     }
 };
